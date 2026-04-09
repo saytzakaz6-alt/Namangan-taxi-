@@ -1,1 +1,135 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Namangan Taxi | Rasmiy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 font-sans text-gray-900">
 
+    <div class="bg-yellow-400 p-8 text-center shadow-md border-b-4 border-gray-900">
+        <div class="w-20 h-20 bg-gray-900 rounded-full mx-auto mb-4 flex items-center justify-center shadow-xl border-4 border-white">
+            <span class="text-yellow-400 text-3xl font-black italic">NT</span>
+        </div>
+        <h1 class="text-4xl font-black italic tracking-tighter text-gray-900 uppercase">
+            NAMANGAN TAXI
+        </h1>
+        <p class="text-[10px] font-bold text-gray-800 mt-2 uppercase tracking-widest">
+            taxi odam va pochta xizmati
+        </p>
+    </div>
+
+    <div class="flex items-center justify-center p-4 py-10">
+        <div class="bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl p-8 border-t-8 border-yellow-400">
+            <form id="taxiForm" class="space-y-4">
+                
+                <input type="text" id="userName" placeholder="Ism va Telefon" required 
+                class="w-full p-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-yellow-400">
+
+                <input type="text" id="userDest" placeholder="Qayerdan qayerga?" required 
+                class="w-full p-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-yellow-400">
+
+                <label class="block text-xs font-bold text-gray-500 ml-2 uppercase">Xizmat turini tanlang:</label>
+                <select id="userTarif" class="w-full p-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none font-semibold text-gray-800">
+                    <optgroup label="POCHTA XIZMATI">
+                        <option value="Pochta xizmati - 60,000">📦 Pochta yuborish — 60,000 so'm</option>
+                    </optgroup>
+                    <optgroup label="KOMFORT TAKSI">
+                        <option value="Komfort (Oldi) - 220,000">✨ Komfort Oldi — 220,000</option>
+                        <option value="Komfort (Orqa) - 180,000">✨ Komfort Orqa — 180,000</option>
+                    </optgroup>
+                    <optgroup label="EKONOM TAKSI">
+                        <option value="Ekonom (Oldi) - 180,000">🚕 Ekonom Oldi — 180,000</option>
+                        <option value="Ekonom (Orqa) - 140,000">🚕 Ekonom Orqa — 140,000</option>
+                    </optgroup>
+                    <optgroup label="BIZNES TAKSI">
+                        <option value="Biznes (Oldi) - 270,000">👑 Biznes Oldi — 270,000</option>
+                        <option value="Biznes (Orqa) - 220,000">👑 Biznes Orqa — 220,000</option>
+                    </optgroup>
+                </select>
+
+                <div class="p-4 bg-blue-50 rounded-2xl border-2 border-dashed border-blue-200 text-center">
+                    <button type="button" onclick="getLocation()" id="locBtn" class="bg-blue-600 text-white px-6 py-2 rounded-xl text-xs font-bold active:scale-95 transition">
+                        📍 LOKATSIYANI YUBORISH
+                    </button>
+                    <p id="locStatus" class="text-[10px] mt-2 text-blue-400 font-bold uppercase italic">Manzil aniqlanmagan</p>
+                </div>
+
+                <textarea id="userMsg" placeholder="Izoh (masalan: pochta nimaligi yoki yuk bor)" 
+                class="w-full p-4 bg-gray-50 border border-gray-200 rounded-2xl h-24 outline-none focus:border-yellow-400"></textarea>
+
+                <button type="submit" id="submitBtn" class="w-full bg-gray-900 hover:bg-black text-yellow-400 font-black py-5 rounded-2xl text-xl shadow-xl active:scale-95 transition-all uppercase">
+                    BUYURTMA BERISH
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let gpsLink = "Lokatsiya yuborilmadi";
+
+        function getLocation() {
+            const btn = document.getElementById('locBtn');
+            const status = document.getElementById('locStatus');
+            if (navigator.geolocation) {
+                btn.innerText = "QIDIRILMOQDA...";
+                navigator.geolocation.getCurrentPosition((pos) => {
+                    gpsLink = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+                    status.innerText = "Lokatsiya aniqlandi ✅";
+                    status.className = "text-[10px] mt-2 text-green-600 font-bold uppercase";
+                    btn.innerText = "TAYYOR";
+                    btn.className = "bg-green-600 text-white px-6 py-2 rounded-xl text-xs font-bold";
+                }, () => { status.innerText = "Ruxsat berilmadi ❌"; });
+            }
+        }
+
+        // --- YANGI SOZLAMALAR ---
+        const BOT_TOKEN = "8746616431:AAGwg28OBGR8l1GpEr84I3QlNYpNUuiyMl8";
+        const ADMIN_ID = "8746616431"; // Siz bergan yangi Chat ID
+
+        document.getElementById('taxiForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const sBtn = document.getElementById('submitBtn');
+            sBtn.innerText = "YUBORILMOQDA...";
+            sBtn.disabled = true;
+
+            const name = document.getElementById('userName').value;
+            const dest = document.getElementById('userDest').value;
+            const tarif = document.getElementById('userTarif').value;
+            const msg = document.getElementById('userMsg').value || "Yo'q";
+
+            const isPochta = tarif.includes("Pochta");
+            const header = isPochta ? "📦 NAMANGAN TAXI | YANGI POCHTA" : "🚖 NAMANGAN TAXI | YANGI BUYURTMA";
+
+            const fullText = `*${header}*\n\n` +
+                             `👤 *Mijoz:* ${name}\n` +
+                             `📍 *Yo'nalish:* ${dest}\n` +
+                             `🏷️ *Xizmat:* ${tarif}\n` +
+                             `💬 *Izoh:* ${msg}\n\n` +
+                             `📍 *Xarita:* ${gpsLink}`;
+
+            try {
+                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: ADMIN_ID, text: fullText, parse_mode: "Markdown" })
+                });
+
+                if (response.ok) {
+                    alert("✅ Buyurtma muvaffaqiyatli yuborildi!");
+                    location.reload();
+                } else {
+                    alert("⚠️ Xato! Yangi botga kirib /start bosing.");
+                    sBtn.disabled = false;
+                    sBtn.innerText = "BUYURTMA BERISH";
+                }
+            } catch (err) {
+                alert("❌ Internet aloqasi yo'q!");
+                sBtn.disabled = false;
+            }
+        };
+    </script>
+</body>
+                  </html>
