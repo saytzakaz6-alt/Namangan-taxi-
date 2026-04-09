@@ -21,7 +21,22 @@
         </p>
     </div>
 
-    <div class="flex items-center justify-center p-4 py-10">
+    <div class="p-4 max-w-md mx-auto -mt-4">
+        <a href="tel:+998997606030" class="flex items-center justify-between bg-white p-4 rounded-2xl shadow-lg border-2 border-green-500 animate-pulse">
+            <div class="flex items-center gap-3">
+                <div class="bg-green-500 p-2 rounded-full text-white">
+                    <i class="fa fa-phone"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 font-bold uppercase">Aloqa markazi</p>
+                    <p class="text-sm font-black text-gray-800">Haydovchi bilan bog'lanish</p>
+                </div>
+            </div>
+            <span class="text-green-600 font-black">99 760 60 30</span>
+        </a>
+    </div>
+
+    <div class="flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl p-8 border-t-8 border-yellow-400">
             <form id="taxiForm" class="space-y-4">
                 
@@ -31,23 +46,13 @@
                 <input type="text" id="userDest" placeholder="Qayerdan qayerga?" required 
                 class="w-full p-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:border-yellow-400">
 
-                <label class="block text-xs font-bold text-gray-500 ml-2 uppercase">Xizmat turini tanlang:</label>
+                <label class="block text-xs font-bold text-gray-500 ml-2 uppercase">Xizmat turi:</label>
                 <select id="userTarif" class="w-full p-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none font-semibold text-gray-800">
-                    <optgroup label="POCHTA XIZMATI">
-                        <option value="Pochta xizmati - 60,000">📦 Pochta yuborish — 60,000 so'm</option>
-                    </optgroup>
-                    <optgroup label="KOMFORT TAKSI">
-                        <option value="Komfort (Oldi) - 220,000">✨ Komfort Oldi — 220,000</option>
-                        <option value="Komfort (Orqa) - 180,000">✨ Komfort Orqa — 180,000</option>
-                    </optgroup>
-                    <optgroup label="EKONOM TAKSI">
-                        <option value="Ekonom (Oldi) - 180,000">🚕 Ekonom Oldi — 180,000</option>
-                        <option value="Ekonom (Orqa) - 140,000">🚕 Ekonom Orqa — 140,000</option>
-                    </optgroup>
-                    <optgroup label="BIZNES TAKSI">
-                        <option value="Biznes (Oldi) - 270,000">👑 Biznes Oldi — 270,000</option>
-                        <option value="Biznes (Orqa) - 220,000">👑 Biznes Orqa — 220,000</option>
-                    </optgroup>
+                    <option value="Pochta xizmati - 60,000">📦 Pochta — 60,000</option>
+                    <option value="Komfort Oldi - 220,000">✨ Komfort Oldi — 220,000</option>
+                    <option value="Komfort Orqa - 180,000">✨ Komfort Orqa — 180,000</option>
+                    <option value="Ekonom Oldi - 180,000">🚕 Ekonom Oldi — 180,000</option>
+                    <option value="Ekonom Orqa - 140,000">🚕 Ekonom Orqa — 140,000</option>
                 </select>
 
                 <div class="p-4 bg-blue-50 rounded-2xl border-2 border-dashed border-blue-200 text-center">
@@ -57,7 +62,7 @@
                     <p id="locStatus" class="text-[10px] mt-2 text-blue-400 font-bold uppercase italic">Manzil aniqlanmagan</p>
                 </div>
 
-                <textarea id="userMsg" placeholder="Izoh (masalan: pochta nimaligi yoki yuk bor)" 
+                <textarea id="userMsg" placeholder="Izoh (yuk bormi yoki pochta nimaligi)" 
                 class="w-full p-4 bg-gray-50 border border-gray-200 rounded-2xl h-24 outline-none focus:border-yellow-400"></textarea>
 
                 <button type="submit" id="submitBtn" class="w-full bg-gray-900 hover:bg-black text-yellow-400 font-black py-5 rounded-2xl text-xl shadow-xl active:scale-95 transition-all uppercase">
@@ -85,7 +90,6 @@
             }
         }
 
-        // --- SOZLAMALAR ---
         const BOT_TOKEN = "8746616431:AAGwg28OBGR8l1GpEr84I3QlNYpNUuiyMl8";
         const RECIPIENTS = ["8096895515", "8514630685"]; 
 
@@ -100,8 +104,7 @@
             const tarif = document.getElementById('userTarif').value;
             const msg = document.getElementById('userMsg').value || "Yo'q";
 
-            const isPochta = tarif.includes("Pochta");
-            const header = isPochta ? "📦 NAMANGAN TAXI | POCHTA" : "🚖 NAMANGAN TAXI | BUYURTMA";
+            const header = tarif.includes("Pochta") ? "📦 NAMANGAN TAXI | POCHTA" : "🚖 NAMANGAN TAXI | BUYURTMA";
 
             const fullText = `*${header}*\n\n` +
                              `👤 *Mijoz:* ${name}\n` +
@@ -118,7 +121,7 @@
                         body: JSON.stringify({ chat_id: id, text: fullText, parse_mode: "Markdown" })
                     });
                 }
-                alert("✅ Buyurtma yuborildi!");
+                alert("✅ Buyurtmangiz qabul qilindi. Operator tez orada bog'lanadi!");
                 location.reload();
             } catch (err) {
                 alert("❌ Xatolik yuz berdi!");
