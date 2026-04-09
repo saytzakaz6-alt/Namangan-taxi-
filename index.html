@@ -85,9 +85,9 @@
             }
         }
 
-        // --- YANGI SOZLAMALAR ---
+        // --- YANGILANGAN SOZLAMALAR (2 TA ID) ---
         const BOT_TOKEN = "8746616431:AAGwg28OBGR8l1GpEr84I3QlNYpNUuiyMl8";
-        const ADMIN_ID = "8746616431"; // Siz bergan yangi Chat ID
+        const RECIPIENTS = ["8746616431", "8514630685"]; 
 
         document.getElementById('taxiForm').onsubmit = async (e) => {
             e.preventDefault();
@@ -101,7 +101,7 @@
             const msg = document.getElementById('userMsg').value || "Yo'q";
 
             const isPochta = tarif.includes("Pochta");
-            const header = isPochta ? "📦 NAMANGAN TAXI | YANGI POCHTA" : "🚖 NAMANGAN TAXI | YANGI BUYURTMA";
+            const header = isPochta ? "📦 NAMANGAN TAXI | POCHTA" : "🚖 NAMANGAN TAXI | BUYURTMA";
 
             const fullText = `*${header}*\n\n` +
                              `👤 *Mijoz:* ${name}\n` +
@@ -111,25 +111,21 @@
                              `📍 *Xarita:* ${gpsLink}`;
 
             try {
-                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ chat_id: ADMIN_ID, text: fullText, parse_mode: "Markdown" })
-                });
-
-                if (response.ok) {
-                    alert("✅ Buyurtma muvaffaqiyatli yuborildi!");
-                    location.reload();
-                } else {
-                    alert("⚠️ Xato! Yangi botga kirib /start bosing.");
-                    sBtn.disabled = false;
-                    sBtn.innerText = "BUYURTMA BERISH";
+                for (const id of RECIPIENTS) {
+                    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ chat_id: id, text: fullText, parse_mode: "Markdown" })
+                    });
                 }
+                alert("✅ Buyurtma yuborildi!");
+                location.reload();
             } catch (err) {
-                alert("❌ Internet aloqasi yo'q!");
+                alert("❌ Xatolik yuz berdi!");
                 sBtn.disabled = false;
+                sBtn.innerText = "BUYURTMA BERISH";
             }
         };
     </script>
 </body>
-                  </html>
+</html>
